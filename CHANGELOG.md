@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.1.0 (2025-11-05)
+
+- Removed `GrapeInstrumentation` middleware - instrumentation now happens automatically via Railtie
+- Refactored internal code into focused modules (Timings, StatusExtractor, Subscriber, EndpointPatch, EndpointWrapper)
+- Improved test coverage for core modules
+
 ## 1.0.0 (2025-11-04)
 
 Initial stable release.

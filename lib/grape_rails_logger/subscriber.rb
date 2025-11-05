@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module GrapeRailsLogger
   # Subscriber that logs Grape API requests with structured data
   #

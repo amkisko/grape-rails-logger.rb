@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module GrapeRailsLogger
   # Thread-safe storage for DB timing metrics per request
   module Timings

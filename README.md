@@ -1,6 +1,6 @@
 # grape-rails-logger
 
-[![Gem Version](https://badge.fury.io/rb/grape-rails-logger.svg?v=1.0.0)](https://badge.fury.io/rb/grape-rails-logger) [![Test Status](https://github.com/amkisko/grape-rails-logger.rb/actions/workflows/ci.yml/badge.svg)](https://github.com/amkisko/grape-rails-logger.rb/actions/workflows/ci.yml) [![codecov](https://codecov.io/gh/amkisko/grape-rails-logger.rb/graph/badge.svg?token=RC5T0Y2Z5A)](https://codecov.io/gh/amkisko/grape-rails-logger.rb)
+[![Gem Version](https://badge.fury.io/rb/grape-rails-logger.svg?v=1.1.0)](https://badge.fury.io/rb/grape-rails-logger) [![Test Status](https://github.com/amkisko/grape-rails-logger.rb/actions/workflows/ci.yml/badge.svg)](https://github.com/amkisko/grape-rails-logger.rb/actions/workflows/ci.yml) [![codecov](https://codecov.io/gh/amkisko/grape-rails-logger.rb/graph/badge.svg?token=RC5T0Y2Z5A)](https://codecov.io/gh/amkisko/grape-rails-logger.rb)
 
 Rails-compatible structured logging for Grape APIs with ActiveRecord timing, parameter filtering, and exception tracking.
 

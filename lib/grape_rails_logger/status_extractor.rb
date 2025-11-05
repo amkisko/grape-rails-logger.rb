@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module GrapeRailsLogger
   # Shared utility for extracting HTTP status codes from exceptions
   module StatusExtractor

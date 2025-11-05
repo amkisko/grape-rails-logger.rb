@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module GrapeRailsLogger
   # Monkey patch Grape::Endpoint#build_stack to wrap the final Rack app
   # This ensures we capture the response AFTER Error middleware has fully processed it
