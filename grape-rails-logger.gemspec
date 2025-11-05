@@ -14,6 +14,7 @@ Gem::Specification.new do |spec|
   spec.files         = Dir.chdir(File.expand_path(__dir__)) do
     Dir["lib/**/*", "sig/**/*", "README.md", "LICENSE*", "CHANGELOG.md"].select { |f| File.file?(f) }
   end
+  spec.require_paths = ["lib"]
   spec.required_ruby_version = ">= 2.7"
 
   spec.metadata = {

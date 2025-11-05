@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.1.1 (2025-11-05)
+
+- Fix autoloading: explicitly set `require_paths` in gemspec so gem works without explicit `require` parameter in Gemfile
+
 ## 1.1.0 (2025-11-05)
 
 - Removed `GrapeInstrumentation` middleware - instrumentation now happens automatically via Railtie
