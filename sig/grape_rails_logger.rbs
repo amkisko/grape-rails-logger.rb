@@ -1,0 +1,47 @@
+module GrapeRailsLogger
+  VERSION: String
+
+  class Config
+    attr_accessor enabled: bool
+    attr_accessor subscriber_class: Class
+    attr_accessor logger: Logger?
+    attr_accessor tag: String
+
+    def initialize: () -> void
+  end
+
+  def self.config: () -> Config
+  def self.configure: () { (Config) -> void } -> void
+  def self.effective_config: () -> Config
+
+  module Timings
+    def self.execution_state: () -> untyped
+    def self.reset_db_runtime: () -> void
+    def self.db_runtime: () -> Float
+    def self.db_calls: () -> Integer
+    def self.append_db_runtime: (ActiveSupport::Notifications::Event event) -> void
+  end
+
+  class GrapeInstrumentation < Grape::Middleware::Base
+    def call!: (Hash[String, untyped] env) -> Array[Integer, Hash[String, String], Array[String]]
+  end
+
+  class DebugTracer < Grape::Middleware::Base
+    def call!: (Hash[String, untyped] env) -> Array[Integer, Hash[String, String], Array[String]]
+  end
+
+  class EndpointWrapper
+    def initialize: (untyped app, untyped endpoint) -> void
+    def call: (Hash[String, untyped] env) -> Array[Integer, Hash[String, String], Array[String]]
+  end
+
+  class GrapeRequestLogSubscriber
+    def initialize: () -> void
+    def grape_request: (ActiveSupport::Notifications::Event event) -> void
+  end
+
+  class StatusExtractor
+    def self.extract_status_from_exception: (Exception exception) -> Integer
+  end
+end
+

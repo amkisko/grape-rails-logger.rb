@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.license       = "MIT"
 
   spec.files         = Dir.chdir(File.expand_path(__dir__)) do
-    Dir["lib/**/*", "README.md", "LICENSE*", "CHANGELOG.md"].select { |f| File.file?(f) }
+    Dir["lib/**/*", "sig/**/*", "README.md", "LICENSE*", "CHANGELOG.md"].select { |f| File.file?(f) }
   end
   spec.required_ruby_version = ">= 2.7"
 
@@ -35,5 +35,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "standard", "~> 1.0"
   spec.add_development_dependency "appraisal", "~> 2.4"
   spec.add_development_dependency "memory_profiler", "~> 1.0"
+  spec.add_development_dependency "rbs", "~> 3.0"
 end
 
