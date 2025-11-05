@@ -13,16 +13,19 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - rails_version: rails-6
+          - gemfile: rails6
             ruby_version: "3.1"
-          - rails_version: rails-7.0
+          - gemfile: rails70
             ruby_version: "3.1"
-          - rails_version: rails-7.2
+          - gemfile: rails72
             ruby_version: "3.2"
-          - rails_version: rails-8-ruby-3.4
+          - gemfile: rails8ruby34
             ruby_version: "3.4"
-          - rails_version: rails-8-truffleruby
+          - gemfile: rails8truffleruby
             ruby_version: "truffleruby"
+    
+    env:
+      BUNDLE_GEMFILE: ${{ github.workspace }}/gemfiles/${{ matrix.gemfile }}.gemfile
     
     steps:
     - uses: actions/checkout@v5
@@ -31,61 +34,10 @@ jobs:
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby_version }}
-        bundler-cache: false
-    
-    - name: Install appraisal gem
-      run: gem install appraisal --no-document
-    
-    - name: Generate appraisal gemfile
-      run: |
-        # Convert rails-8-ruby-3.4 to rails_8_ruby_3_4 format for gemfile name
-        GEMFILE_NAME=$(echo "${{ matrix.rails_version }}" | tr '-' '_')
-        appraisal install ${{ matrix.rails_version }} || true
-        # Verify gemfile was created
-        if [ ! -f "gemfiles/${GEMFILE_NAME}.gemfile" ]; then
-          echo "Error: gemfile not created at gemfiles/${GEMFILE_NAME}.gemfile"
-          exit 1
-        fi
-        # Set BUNDLE_GEMFILE for subsequent steps
-        echo "BUNDLE_GEMFILE=gemfiles/${GEMFILE_NAME}.gemfile" >> $GITHUB_ENV
-    
-    - name: Update lockfile for platform and Ruby version
-      run: |
-        GEMFILE_NAME=$(echo "${{ matrix.rails_version }}" | tr '-' '_')
-        GEMFILE_PATH="gemfiles/${GEMFILE_NAME}.gemfile"
-        export BUNDLE_GEMFILE=${GEMFILE_PATH}
-        if [ -f "${GEMFILE_PATH}.lock" ]; then
-          # Add Linux platform if needed
-          bundle lock --add-platform x86_64-linux --gemfile ${GEMFILE_PATH} 2>/dev/null || true
-          # Try to install - if it fails due to incompatible versions, regenerate lockfile
-          if ! bundle install --gemfile ${GEMFILE_PATH} 2>/dev/null; then
-            echo "Lockfile has incompatible versions, regenerating..."
-            rm -f "${GEMFILE_PATH}.lock"
-            bundle install --gemfile ${GEMFILE_PATH}
-          fi
-        fi
-    
-    - name: Determine bundler version
-      id: bundler_version
-      run: |
-        GEMFILE_NAME=$(echo "${{ matrix.rails_version }}" | tr '-' '_')
-        GEMFILE_PATH="gemfiles/${GEMFILE_NAME}.gemfile"
-        if [ -f "${GEMFILE_PATH}.lock" ]; then
-          BUNDLER_VERSION=$(grep -A 1 "BUNDLED WITH" "${GEMFILE_PATH}.lock" | tail -1 | tr -d ' ')
-          if [ -n "$BUNDLER_VERSION" ]; then
-            echo "version=$BUNDLER_VERSION" >> $GITHUB_OUTPUT
-          fi
-        fi
-    
-    - name: Install dependencies
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: ${{ matrix.ruby_version }}
-        bundler-version: ${{ steps.bundler_version.outputs.version }}
         bundler-cache: true
     
     - name: Run tests
-      run: bundle exec appraisal ${{ matrix.rails_version }} rspec
+      run: bundle exec rspec
 
   coverage:
     runs-on: ubuntu-latest

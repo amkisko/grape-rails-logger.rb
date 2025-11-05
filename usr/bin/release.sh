@@ -14,7 +14,7 @@ e() {
 }
 
 e "bundle"
-e "bundle exec appraisal install"
+e "bundle exec appraisal install && bundle exec appraisal bundle lock --add-platform x86_64-linux"
 e "bundle exec standardrb --fix"
 e "bundle exec rbs validate"
 e "bundle exec rspec"
