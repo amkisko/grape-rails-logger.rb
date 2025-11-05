@@ -7,7 +7,6 @@ RSpec.describe "Params extraction edge cases" do
   it "extracts params from endpoint request" do
     app = Class.new(Grape::API) do
       format :json
-      use GrapeRailsLogger::GrapeInstrumentation
       params do
         optional :username
         optional :email

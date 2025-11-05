@@ -5,7 +5,10 @@ require "grape"
 # Load all required files first to ensure constants are available
 # This must happen before the module definition (like other gems do)
 require_relative "grape_rails_logger/version"
-require_relative "grape_rails_logger/grape_instrumentation"
+require_relative "grape_rails_logger/timings"
+require_relative "grape_rails_logger/status_extractor"
+require_relative "grape_rails_logger/subscriber"
+require_relative "grape_rails_logger/endpoint_patch"
 require_relative "grape_rails_logger/endpoint_wrapper"
 require_relative "grape_rails_logger/debug_tracer"
 

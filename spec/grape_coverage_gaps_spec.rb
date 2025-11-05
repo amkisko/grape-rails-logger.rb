@@ -9,27 +9,23 @@ RSpec.describe "Coverage gaps - error handling and edge cases" do
     Rails._logger = logger
   end
 
-  describe "GrapeInstrumentation error handling" do
+  describe "EndpointWrapper error handling" do
     it "handles instrumentation error gracefully" do
-      app = Class.new(Grape::API) do
-        format :json
-        use GrapeRailsLogger::GrapeInstrumentation
-        get("/test") { {ok: true} }
-      end
-
-      middleware = GrapeRailsLogger::GrapeInstrumentation.new(app)
+      app = ->(env) { [200, {}, ["OK"]] }
 
       # Force ActiveSupport::Notifications to raise
       allow(ActiveSupport::Notifications).to receive(:instrument).and_raise(StandardError, "Instrumentation failed")
 
+      wrapper = GrapeRailsLogger::EndpointWrapper.new(app, nil)
       env = Rack::MockRequest.env_for("/test")
-      expect { middleware.call!(env) }.to raise_error(StandardError)
+      response = wrapper.call(env)
+      expect(response).to be_an(Array)
+      expect(response[0]).to eq(200)
     end
 
-    it "handles before_call error gracefully" do
+    it "handles Timings.reset_db_runtime error gracefully" do
       app = Class.new(Grape::API) do
         format :json
-        use GrapeRailsLogger::GrapeInstrumentation
         get("/test") { {ok: true} }
       end
 
@@ -39,25 +35,21 @@ RSpec.describe "Coverage gaps - error handling and edge cases" do
       expect(response.status).to eq(200)
     end
 
-    it "handles capture_response_metadata error gracefully" do
-      app = Class.new(Grape::API) do
-        format :json
-        use GrapeRailsLogger::GrapeInstrumentation
-        get("/test") { {ok: true} }
-      end
+    it "handles collect_response_metadata error gracefully" do
+      app = ->(env) { [200, {}, ["OK"]] }
 
-      middleware = GrapeRailsLogger::GrapeInstrumentation.new(app)
-      allow(middleware).to receive(:extract_status_from_response).and_raise(StandardError, "Extract failed")
+      wrapper = GrapeRailsLogger::EndpointWrapper.new(app, nil)
+      allow(wrapper).to receive(:extract_status_from_response).and_raise(StandardError, "Extract failed")
 
       env = Rack::MockRequest.env_for("/test")
-      response = middleware.call!(env)
+      response = wrapper.call(env)
       expect(response).to be_an(Array)
+      expect(response[0]).to eq(200)
     end
 
     it "handles exception during request processing" do
       app = Class.new(Grape::API) do
         format :json
-        use GrapeRailsLogger::GrapeInstrumentation
         get("/test") { raise StandardError, "Request failed" }
       end
 
@@ -81,11 +73,11 @@ RSpec.describe "Coverage gaps - error handling and edge cases" do
         end
       end.new
 
-      middleware = GrapeRailsLogger::GrapeInstrumentation.new(->(env) { response_obj })
+      wrapper = GrapeRailsLogger::EndpointWrapper.new(->(env) { response_obj }, nil)
 
       env = Rack::MockRequest.env_for("/test")
       # Should not raise error
-      expect { middleware.call!(env) }.not_to raise_error
+      expect { wrapper.call(env) }.not_to raise_error
     end
   end
 

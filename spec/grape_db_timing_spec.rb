@@ -12,7 +12,6 @@ RSpec.describe "DB timing aggregation" do
   it "aggregates sql.active_record durations and counts" do
     app = Class.new(Grape::API) do
       format :json
-      use GrapeRailsLogger::GrapeInstrumentation
       get("/db") do
         ActiveSupport::Notifications.instrument("sql.active_record") { 1 + 1 }
         ActiveSupport::Notifications.instrument("sql.active_record") { 2 + 2 }

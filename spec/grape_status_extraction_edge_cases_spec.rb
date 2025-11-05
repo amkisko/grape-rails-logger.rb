@@ -4,7 +4,7 @@ require_relative "support/logger_stub"
 
 RSpec.describe "Status extraction edge cases" do
   let(:subscriber) { GrapeRailsLogger::GrapeRequestLogSubscriber.new }
-  let(:middleware) { GrapeRailsLogger::GrapeInstrumentation.new(nil) }
+  let(:endpoint_wrapper) { GrapeRailsLogger::EndpointWrapper.new(nil, nil) }
 
   describe "subscriber status extraction" do
     it "extracts status from endpoint, payload, exception, and response in priority order" do
@@ -67,29 +67,29 @@ RSpec.describe "Status extraction edge cases" do
     end
   end
 
-  describe "middleware response status extraction" do
+  describe "EndpointWrapper response status extraction" do
     it "extracts status from array response" do
-      status = middleware.send(:extract_status_from_response, [404, {}, []])
+      status = endpoint_wrapper.send(:extract_status_from_response, [404, {}, []])
       expect(status).to eq(404)
     end
 
     it "extracts status from response object with status method" do
       response_obj = double("Response", status: 418)
-      status = middleware.send(:extract_status_from_response, response_obj)
+      status = endpoint_wrapper.send(:extract_status_from_response, response_obj)
       expect(status).to eq(418)
     end
 
     it "returns nil for unknown response types" do
-      status = middleware.send(:extract_status_from_response, "string response")
+      status = endpoint_wrapper.send(:extract_status_from_response, "string response")
       expect(status).to be_nil
 
-      status = middleware.send(:extract_status_from_response, Object.new)
+      status = endpoint_wrapper.send(:extract_status_from_response, Object.new)
       expect(status).to be_nil
     end
 
     it "returns nil for response object with non-integer status" do
       response_obj = Struct.new(:status).new("200")
-      status = middleware.send(:extract_status_from_response, response_obj)
+      status = endpoint_wrapper.send(:extract_status_from_response, response_obj)
       expect(status).to be_nil
     end
   end

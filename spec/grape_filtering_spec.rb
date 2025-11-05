@@ -13,7 +13,6 @@ RSpec.describe "parameter filtering" do
   it "filters parameters using Rails ParameterFilter" do
     app = Class.new(Grape::API) do
       format :json
-      use GrapeRailsLogger::GrapeInstrumentation
       params do
         optional :username
         optional :password

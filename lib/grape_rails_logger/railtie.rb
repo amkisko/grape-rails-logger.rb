@@ -9,27 +9,10 @@ module GrapeRailsLogger
     config.grape_rails_logger.logger = nil # Default to nil, will use Rails.logger
     config.grape_rails_logger.tag = "Grape" # Default tag for TaggedLogging
 
-    # Monkey patch Grape::Endpoint#build_stack to wrap the final Rack app
-    # This ensures we capture the response AFTER Error middleware has fully processed it
-    # Define the module outside the block to avoid constant definition warnings
-    module ::GrapeRailsLogger
-      module EndpointPatch
-        def build_stack(*args)
-          app = super
-          # Wrap the final Rack app to capture responses after Error middleware
-          if ::GrapeRailsLogger.effective_config.enabled
-            ::GrapeRailsLogger::EndpointWrapper.new(app, self)
-          else
-            app
-          end
-        end
-      end
-    end
-
     config.after_initialize do
       # Patch Grape::Endpoint#build_stack to wrap the final Rack app
       # Use prepend to avoid method redefinition issues
-      Grape::Endpoint.prepend(::GrapeRailsLogger::EndpointPatch)
+      Grape::Endpoint.prepend(GrapeRailsLogger::EndpointPatch)
       # Subscribe to ActiveRecord SQL events for DB timing aggregation
       # Only subscribe if ActiveRecord is loaded (optional dependency)
       if defined?(ActiveRecord)

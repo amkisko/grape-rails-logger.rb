@@ -4,7 +4,8 @@ RSpec.describe "GrapeRailsLogger module loading" do
   it "loads all required modules" do
     expect(defined?(GrapeRailsLogger)).to be_truthy
     expect(defined?(GrapeRailsLogger::Timings)).to be_truthy
-    expect(defined?(GrapeRailsLogger::GrapeInstrumentation)).to be_truthy
+    expect(defined?(GrapeRailsLogger::EndpointPatch)).to be_truthy
+    expect(defined?(GrapeRailsLogger::EndpointWrapper)).to be_truthy
     expect(defined?(GrapeRailsLogger::GrapeRequestLogSubscriber)).to be_truthy
     expect(defined?(GrapeRailsLogger::DebugTracer)).to be_truthy
     expect(defined?(GrapeRailsLogger::StatusExtractor)).to be_truthy
@@ -13,7 +14,7 @@ RSpec.describe "GrapeRailsLogger module loading" do
   it "loads constants correctly for Rails autoloading" do
     # Verify all constants are available for Rails autoloading
     # Subscribers are registered when Rails loads via Railtie, not during gem require
-    expect(defined?(GrapeRailsLogger::GrapeInstrumentation)).to be_truthy
+    expect(defined?(GrapeRailsLogger::EndpointPatch)).to be_truthy
     expect(defined?(GrapeRailsLogger::GrapeRequestLogSubscriber)).to be_truthy
   end
 

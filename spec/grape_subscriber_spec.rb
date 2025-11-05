@@ -12,7 +12,6 @@ RSpec.describe GrapeRailsLogger::GrapeRequestLogSubscriber do
   it "logs successful request with all fields" do
     app = Class.new(Grape::API) do
       format :json
-      use GrapeRailsLogger::GrapeInstrumentation
       params do
         optional :username
         optional :email
@@ -33,7 +32,6 @@ RSpec.describe GrapeRailsLogger::GrapeRequestLogSubscriber do
   it "logs exception info for unhandled exceptions" do
     app = Class.new(Grape::API) do
       format :json
-      use GrapeRailsLogger::GrapeInstrumentation
       get("/boom") { raise ArgumentError, "bad" }
     end
 
@@ -47,7 +45,6 @@ RSpec.describe GrapeRailsLogger::GrapeRequestLogSubscriber do
     allow(Rails).to receive(:logger).and_return(nil)
     app = Class.new(Grape::API) do
       format :json
-      use GrapeRailsLogger::GrapeInstrumentation
       get("/test") { raise StandardError, "test" }
     end
     expect { Rack::MockRequest.new(app).get("/test") }.to raise_error(StandardError)

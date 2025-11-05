@@ -3,6 +3,14 @@
 # we need to manually set up the subscribers
 
 module SubscriberHelper
+  def setup_endpoint_patch
+    # Patch Grape::Endpoint#build_stack to use EndpointWrapper (same as Railtie does)
+    # Only patch if not already patched
+    unless Grape::Endpoint.ancestors.include?(GrapeRailsLogger::EndpointPatch)
+      Grape::Endpoint.prepend(GrapeRailsLogger::EndpointPatch)
+    end
+  end
+
   def setup_subscribers
     # Clear any existing subscribers to avoid duplicates
     # Note: We can't easily unsubscribe, so we'll just add new ones
@@ -48,6 +56,8 @@ RSpec.configure do |config|
     Rails.application.config.grape_rails_logger.enabled = true
     Rails.application.config.grape_rails_logger.subscriber_class = GrapeRailsLogger::GrapeRequestLogSubscriber
 
+    # Set up endpoint patch (automatically patches Grape::Endpoint#build_stack)
+    setup_endpoint_patch
     # Set up subscribers
     setup_subscribers
   end

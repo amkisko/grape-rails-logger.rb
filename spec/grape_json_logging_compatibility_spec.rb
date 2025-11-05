@@ -13,7 +13,6 @@ RSpec.describe "grape-rails-logger compatibility with JsonLogging" do
     it "works with plain Rails.logger and Hash messages" do
       app = Class.new(Grape::API) do
         format :json
-        use GrapeRailsLogger::GrapeInstrumentation
         get("/test") { {ok: true} }
       end
 
@@ -30,7 +29,6 @@ RSpec.describe "grape-rails-logger compatibility with JsonLogging" do
     it "logs error messages as Hash" do
       app = Class.new(Grape::API) do
         format :json
-        use GrapeRailsLogger::GrapeInstrumentation
         get("/error") { error!("nope", 400) }
       end
 
@@ -75,7 +73,6 @@ RSpec.describe "grape-rails-logger compatibility with JsonLogging" do
 
       app = Class.new(Grape::API) do
         format :json
-        use GrapeRailsLogger::GrapeInstrumentation
         get("/test") { {ok: true} }
       end
 
@@ -94,7 +91,6 @@ RSpec.describe "grape-rails-logger compatibility with JsonLogging" do
 
     app = Class.new(Grape::API) do
       format :json
-      use GrapeRailsLogger::GrapeInstrumentation
       get("/test") { {ok: true} }
     end
 
