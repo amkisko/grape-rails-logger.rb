@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.1.2 (2025-11-05)
+
+- Fix autoloading: replace `require_relative` with `require` in main entry file to work when installed from RubyGems
+- Fix Railtie discovery: always require Railtie file (not conditionally) so Rails can discover it during initialization
+
 ## 1.1.1 (2025-11-05)
 
 - Fix autoloading: explicitly set `require_paths` in gemspec so gem works without explicit `require` parameter in Gemfile
