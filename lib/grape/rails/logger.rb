@@ -9,4 +9,3 @@ module Grape
     Logger = GrapeRailsLogger
   end
 end
-
