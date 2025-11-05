@@ -4,13 +4,13 @@ require "grape"
 
 # Load all required files first to ensure constants are available
 # This must happen before the module definition (like other gems do)
-require_relative "grape_rails_logger/version"
-require_relative "grape_rails_logger/timings"
-require_relative "grape_rails_logger/status_extractor"
-require_relative "grape_rails_logger/subscriber"
-require_relative "grape_rails_logger/endpoint_patch"
-require_relative "grape_rails_logger/endpoint_wrapper"
-require_relative "grape_rails_logger/debug_tracer"
+require "grape_rails_logger/version"
+require "grape_rails_logger/timings"
+require "grape_rails_logger/status_extractor"
+require "grape_rails_logger/subscriber"
+require "grape_rails_logger/endpoint_patch"
+require "grape_rails_logger/endpoint_wrapper"
+require "grape_rails_logger/debug_tracer"
 
 module GrapeRailsLogger
   # Configuration for GrapeRailsLogger
@@ -73,5 +73,6 @@ module GrapeRailsLogger
   end
 end
 
-# Only load Railtie if Rails::Railtie is available (real Rails app, not test stub)
-require_relative "grape_rails_logger/railtie" if defined?(Rails) && defined?(Rails::Railtie)
+# Load Railtie for Rails integration
+# Rails will automatically discover and initialize this Railtie
+require "grape_rails_logger/railtie"
